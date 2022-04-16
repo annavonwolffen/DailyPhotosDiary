@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- paddings -->
+    <dimen name="padding_small">10dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+
+    <!-- paddings end-->
+
+    <!-- margins -->
+    <dimen name="margin_small">10dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+
+
+    <!-- margins end -->
+
+    <!-- icon sizes -->
+    <dimen name="icon_size_default">36dp</dimen>
+    <!-- icon sizes end-->
+
+</resources>

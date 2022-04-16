@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@id/gallery_graph"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/gallery_fragment">
+
+    <fragment
+        android:id="@id/gallery_fragment"
+        android:name="com.annevonwolffen.gallery_impl.presentation.GalleryFragment"
+        android:label="Дневник"
+        tools:layout="@layout/fragment_gallery">
+
+        <action
+            android:id="@+id/action_toAddImage"
+            app:destination="@id/add_image_fragment">
+
+            <argument
+                android:name="toolbar_title"
+                app:argType="string" />
+
+            <argument
+                android:name="image"
+                android:defaultValue="@null"
+                app:argType="com.annevonwolffen.gallery_impl.presentation.models.Image"
+                app:nullable="true" />
+
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/add_image_fragment"
+        android:name="com.annevonwolffen.gallery_impl.presentation.AddImageFragment"
+        android:label="{toolbar_title}"
+        tools:layout="@layout/fragment_add_image">
+
+        <action
+            android:id="@+id/action_toAddImageBottomSheet"
+            app:destination="@id/add_image_bottomsheet" />
+
+        <argument
+            android:name="toolbar_title"
+            app:argType="string" />
+
+        <argument
+            android:name="image"
+            android:defaultValue="@null"
+            app:argType="com.annevonwolffen.gallery_impl.presentation.models.Image"
+            app:nullable="true" />
+
+    </fragment>
+
+    <dialog
+        android:id="@+id/add_image_bottomsheet"
+        android:name="com.annevonwolffen.gallery_impl.presentation.AddImageBottomSheet"
+        tools:layout="@layout/bottomsheet_add_image" />
+
+</navigation>

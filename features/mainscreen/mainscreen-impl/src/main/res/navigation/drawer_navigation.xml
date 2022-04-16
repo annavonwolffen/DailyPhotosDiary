@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/gallery_graph">
+
+    <include app:graph="@navigation/gallery_graph" />
+
+    <include app:graph="@navigation/settings_graph" />
+
+<!--    <include app:graph="@navigation/authorization_graph" />-->
+
+</navigation>
