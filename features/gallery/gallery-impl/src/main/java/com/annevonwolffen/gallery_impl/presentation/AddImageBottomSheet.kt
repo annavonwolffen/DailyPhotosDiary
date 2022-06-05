@@ -13,6 +13,7 @@ import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.BottomsheetAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
+import com.annevonwolffen.ui_utils_api.extensions.fragmentViewBinding
 import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.flow.launchIn
@@ -21,8 +22,7 @@ import com.annevonwolffen.navigation.R as NavR
 
 class AddImageBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding: BottomsheetAddImageBinding? = null
-    private val binding get() = _binding!!
+    private val binding: BottomsheetAddImageBinding by fragmentViewBinding(BottomsheetAddImageBinding::bind)
 
     private val viewModel: AddImageViewModel by navGraphViewModels(NavR.id.gallery_graph) {
         ViewModelProviderFactory {
@@ -35,10 +35,8 @@ class AddImageBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = BottomsheetAddImageBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.bottomsheet_add_image, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,11 +62,6 @@ class AddImageBottomSheet : BottomSheetDialogFragment() {
 
     override fun getTheme(): Int {
         return R.style.ThemeOverlay_BottomSheetDialog
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 
     sealed class AddImage {
