@@ -7,11 +7,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -44,6 +42,7 @@ import com.annevonwolffen.gallery_impl.presentation.utils.toDateString
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
 import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
+import com.annevonwolffen.ui_utils_api.extensions.fragmentViewBinding
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
@@ -54,10 +53,9 @@ import java.io.File
 import java.util.Calendar
 import com.annevonwolffen.navigation.R as NavR
 
-class AddImageFragment : Fragment() {
+class AddImageFragment : Fragment(R.layout.fragment_add_image) {
 
-    private var _binding: FragmentAddImageBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentAddImageBinding by fragmentViewBinding(FragmentAddImageBinding::bind)
 
     private val viewModel: AddImageViewModel by navGraphViewModels(NavR.id.gallery_graph) {
         ViewModelProviderFactory {
@@ -90,11 +88,6 @@ class AddImageFragment : Fragment() {
         } else {
             viewModel.setFile(null)
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentAddImageBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -269,11 +262,6 @@ class AddImageFragment : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private companion object {

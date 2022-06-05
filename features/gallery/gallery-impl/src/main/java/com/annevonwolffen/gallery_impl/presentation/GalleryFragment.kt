@@ -3,11 +3,9 @@ package com.annevonwolffen.gallery_impl.presentation
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -30,16 +28,16 @@ import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.ui_utils_api.UiUtilsApi
+import com.annevonwolffen.ui_utils_api.extensions.fragmentViewBinding
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class GalleryFragment : Fragment() {
+class GalleryFragment : Fragment(R.layout.fragment_gallery) {
 
-    private var _binding: FragmentGalleryBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentGalleryBinding by fragmentViewBinding(FragmentGalleryBinding::bind)
 
     private val galleryInternalApi: GalleryInternalApi by lazy {
         getInnerFeature(
@@ -63,14 +61,6 @@ class GalleryFragment : Fragment() {
                 galleryInternalApi.settingsInteractor
             )
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -203,7 +193,6 @@ class GalleryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         recyclerView.adapter?.unregisterAdapterDataObserver(adapterDataObserver)
-        _binding = null
     }
 
     private companion object {
