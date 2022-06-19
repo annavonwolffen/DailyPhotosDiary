@@ -16,7 +16,7 @@ import com.annevonwolffen.ui_utils_api.image.ImageLoader
 class ImagesGroupListAdapter(
     private val imageLoader: ImageLoader,
     private val onClick: (Image) -> Unit,
-    private val onLongClick: (String) -> Unit
+    private val onLongClick: (String, String) -> Unit
 ) : ListAdapter<ImagesGroup, ImagesGroupListAdapter.ViewHolder>(DiffUtilCallback()) {
 
     class DiffUtilCallback : DiffUtil.ItemCallback<ImagesGroup>() {
@@ -40,7 +40,7 @@ class ImagesGroupListAdapter(
         private val binding: ImagesGroupLayoutBinding,
         private val imageLoader: ImageLoader,
         private val onClick: (Image) -> Unit,
-        private val onLongClick: (String) -> Unit
+        private val onLongClick: (String, String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         private lateinit var imagesRecyclerView: RecyclerView
 

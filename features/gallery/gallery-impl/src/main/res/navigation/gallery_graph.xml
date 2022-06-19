@@ -69,10 +69,15 @@
     <fragment
         android:id="@+id/image_fragment"
         android:name="com.annevonwolffen.gallery_impl.presentation.ImageFragment"
+        android:label="{image_date}"
         tools:layout="@layout/fragment_image">
 
         <argument
             android:name="image_url"
+            app:argType="string" />
+
+        <argument
+            android:name="image_date"
             app:argType="string" />
 
     </fragment>

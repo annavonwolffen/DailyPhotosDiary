@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -20,12 +21,14 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.annevonwolffen.authorization_api.di.AuthorizationApi
 import com.annevonwolffen.authorization_api.domain.AuthInteractor
+import com.annevonwolffen.design_system.extensions.doOnApplyWindowInsets
 import com.annevonwolffen.design_system.extensions.setStatusBarColor
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.mainscreen_api.ToolbarFragment
 import com.annevonwolffen.mainscreen_impl.R
 import com.annevonwolffen.navigation.activityNavController
 import com.annevonwolffen.navigation.navigateSafely
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.launch
 import com.annevonwolffen.design_system.R as DesignR
@@ -97,6 +100,9 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
         )
         toolbar = view.findViewById(R.id.toolbar)
         toolbar.setupWithNavController(navController, appBarConfiguration)
+        view.findViewById<AppBarLayout>(R.id.appbar).doOnApplyWindowInsets { topInset, bottomInset ->
+            view.findViewById<AppBarLayout>(R.id.appbar).updatePadding(top = topInset)
+        }
     }
 
     override fun inflateToolbarMenu(
@@ -114,6 +120,10 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
 
     override fun clearToolbarMenu() {
         toolbar.menu.clear()
+    }
+
+    override fun setToolbarVisibility(isVisible: Boolean) {
+        toolbar.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 }
 

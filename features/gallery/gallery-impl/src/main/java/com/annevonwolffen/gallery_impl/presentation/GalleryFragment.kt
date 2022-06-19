@@ -87,7 +87,7 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
             ImagesGroupListAdapter(
                 getFeature(UiUtilsApi::class).imageLoader,
                 { image -> addOrEditImage(image) },
-                { url -> openImage(url) }
+                { url, date -> openImage(url, date) }
             )
         recyclerView.adapter = adapter
         adapterDataObserver = object : RecyclerView.AdapterDataObserver() {
@@ -110,8 +110,8 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         )
     }
 
-    private fun openImage(url: String) {
-        findNavController().navigate(GalleryFragmentDirections.actionToImage(url))
+    private fun openImage(url: String, dateString: String) {
+        findNavController().navigate(GalleryFragmentDirections.actionToImage(url, dateString))
     }
 
     private fun collectImages() {
