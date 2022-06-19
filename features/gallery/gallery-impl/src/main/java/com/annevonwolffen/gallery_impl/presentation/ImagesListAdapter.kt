@@ -14,7 +14,8 @@ import com.annevonwolffen.ui_utils_api.image.ImageLoader
 
 class ImagesListAdapter(
     private val imageLoader: ImageLoader,
-    private val onClick: (Image) -> Unit
+    private val onClick: (Image) -> Unit,
+    private val onLongClick: (String) -> Unit
 ) :
     ListAdapter<Image, ImagesListAdapter.ViewHolder>(DiffUtilCallback()) {
 
@@ -31,7 +32,7 @@ class ImagesListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ImageCardLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding, imageLoader, onClick)
+        return ViewHolder(binding, imageLoader, onClick, onLongClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -48,7 +49,8 @@ class ImagesListAdapter(
     class ViewHolder(
         private val binding: ImageCardLayoutBinding,
         private val imageLoader: ImageLoader,
-        private val onClick: (Image) -> Unit
+        private val onClick: (Image) -> Unit,
+        private val onLongClick: (String) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -59,6 +61,7 @@ class ImagesListAdapter(
                 binding.tvDescription.text = description
                 imageLoader.loadImage(binding.ivPhoto, url, R.drawable.image_progress_loader)
                 binding.content.setOnClickListener { onClick.invoke(this) }
+                binding.content.setOnLongClickListener { onLongClick(image.url); true }
             }
         }
     }

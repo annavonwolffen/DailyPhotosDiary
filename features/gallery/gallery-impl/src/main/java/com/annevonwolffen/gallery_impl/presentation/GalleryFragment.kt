@@ -84,7 +84,11 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
     private fun setupRecyclerView() {
         recyclerView = binding.rvPhotos
         adapter =
-            ImagesGroupListAdapter(getFeature(UiUtilsApi::class).imageLoader) { image -> addOrEditImage(image) }
+            ImagesGroupListAdapter(
+                getFeature(UiUtilsApi::class).imageLoader,
+                { image -> addOrEditImage(image) },
+                { url -> openImage(url) }
+            )
         recyclerView.adapter = adapter
         adapterDataObserver = object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -104,6 +108,10 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
                 image
             )
         )
+    }
+
+    private fun openImage(url: String) {
+        findNavController().navigate(GalleryFragmentDirections.actionToImage(url))
     }
 
     private fun collectImages() {

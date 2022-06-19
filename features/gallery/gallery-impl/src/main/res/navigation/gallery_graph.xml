@@ -26,6 +26,17 @@
                 app:nullable="true" />
 
         </action>
+
+        <action
+            android:id="@+id/action_toImage"
+            app:destination="@id/image_fragment">
+
+            <argument
+                android:name="image_url"
+                app:argType="string" />
+
+        </action>
+
     </fragment>
 
     <fragment
@@ -54,5 +65,16 @@
         android:id="@+id/add_image_bottomsheet"
         android:name="com.annevonwolffen.gallery_impl.presentation.AddImageBottomSheet"
         tools:layout="@layout/bottomsheet_add_image" />
+
+    <fragment
+        android:id="@+id/image_fragment"
+        android:name="com.annevonwolffen.gallery_impl.presentation.ImageFragment"
+        tools:layout="@layout/fragment_image">
+
+        <argument
+            android:name="image_url"
+            app:argType="string" />
+
+    </fragment>
 
 </navigation>
