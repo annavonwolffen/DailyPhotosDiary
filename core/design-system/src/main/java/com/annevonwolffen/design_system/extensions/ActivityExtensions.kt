@@ -9,10 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
-fun Activity.removeNavBarInset(listener: OnSystemInsetsChangedListener = { _, _ -> }) {
-    window.decorView.removeNavBarInset(listener)
-}
-
 fun Activity.setStatusBarColor(@ColorRes colorId: Int) {
     window.statusBarColor = resources.getColor(colorId, theme)
 }

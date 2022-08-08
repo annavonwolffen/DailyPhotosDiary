@@ -16,6 +16,8 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
 
         <item name="actionBarTheme">@style/ThemeOverlay.DailyPhotosDiary.AppBar</item>
+
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
     </style>
 
     <style name="ThemeOverlay.DailyPhotosDiary.AppBar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">

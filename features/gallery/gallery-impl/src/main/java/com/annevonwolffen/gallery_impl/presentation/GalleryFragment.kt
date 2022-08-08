@@ -6,9 +6,12 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -16,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.annevonwolffen.design_system.extensions.doOnApplyWindowInsets
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.di.FeatureProvider.getInnerFeature
 import com.annevonwolffen.gallery_api.di.GalleryExternalApi
@@ -34,6 +38,7 @@ import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import com.annevonwolffen.design_system.R as DesignR
 
 class GalleryFragment : Fragment(R.layout.fragment_gallery) {
 
@@ -79,6 +84,11 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         addImageButton = binding.btnAddImage
         addImageButton.setOnClickListener { addOrEditImage(null) }
         shimmerLayout = binding.shimmerLayout.root
+        binding.btnAddImage.doOnApplyWindowInsets { _, bottomInset ->
+            updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = resources.getDimensionPixelOffset(DesignR.dimen.margin_medium) + bottomInset
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -97,6 +107,9 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
             }
         }
         adapter.registerAdapterDataObserver(adapterDataObserver)
+        recyclerView.doOnApplyWindowInsets { _, bottomInset ->
+            updatePadding(bottom = resources.getDimensionPixelOffset(DesignR.dimen.padding_medium) + bottomInset)
+        }
     }
 
     private fun addOrEditImage(image: Image?) {
@@ -151,7 +164,7 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         addImageButton.isEnabled = isEnabled
         addImageButton.setBackgroundColor(
             if (isEnabled) {
-                com.annevonwolffen.design_system.R.color.color_green_300_dark
+                DesignR.color.color_green_300_dark
             } else {
                 R.color.gray_500
             }
