@@ -12,7 +12,6 @@ class GlideImageLoader @Inject constructor() : ImageLoader {
     override fun loadImage(view: ImageView, url: String?, @DrawableRes placeHolder: Int?) {
         Glide.with(view)
             .load(url)
-            .fitCenter()
             .run {
                 placeHolder?.let { this.placeholder(it) }
                 this
@@ -21,21 +20,18 @@ class GlideImageLoader @Inject constructor() : ImageLoader {
                 placeHolder?.let { this.error(it) }
                 this
             }
-            .centerCrop()
             .into(view)
     }
 
     override fun loadImage(view: ImageView, uri: Uri?) {
         Glide.with(view)
             .load(uri)
-            .centerCrop()
             .into(view)
     }
 
     override fun loadImage(view: ImageView, file: File?) {
         Glide.with(view)
             .load(file)
-            .centerCrop()
             .into(view)
     }
 }

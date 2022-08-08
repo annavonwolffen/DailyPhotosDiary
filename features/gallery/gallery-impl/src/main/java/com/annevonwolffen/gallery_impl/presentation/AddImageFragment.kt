@@ -10,12 +10,14 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +26,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.annevonwolffen.coroutine_utils_api.extension.launchFlowCollection
+import com.annevonwolffen.design_system.extensions.doOnApplyWindowInsets
 import com.annevonwolffen.design_system.extensions.hideKeyboard
 import com.annevonwolffen.di.FeatureProvider.getFeature
 import com.annevonwolffen.di.FeatureProvider.getInnerFeature
@@ -46,7 +49,6 @@ import com.annevonwolffen.ui_utils_api.extensions.fragmentViewBinding
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.launch
 import java.io.File
@@ -77,7 +79,6 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
     private lateinit var description: EditText
     private lateinit var dateTextView: TextView
     private lateinit var progressLoader: FrameLayout
-    private lateinit var deleteButton: MaterialButton
 
     private var selectedCalendar: Calendar = Calendar.getInstance()
 
@@ -153,9 +154,16 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
     }
 
     private fun setupDeleteButton() {
-        deleteButton = binding.btnDelete
-        deleteButton.setVisibility(image?.id != null)
-        image?.let { im -> deleteButton.setOnClickListener { viewModel.deleteImage(im.toDomain()) } }
+        binding.btnDelete.apply {
+            setVisibility(image?.id != null)
+            image?.let { im -> setOnClickListener { viewModel.deleteImage(im.toDomain()) } }
+            doOnApplyWindowInsets { _, bottomInset ->
+                updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    bottomMargin =
+                        resources.getDimensionPixelOffset(com.annevonwolffen.design_system.R.dimen.margin_medium) + bottomInset
+                }
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

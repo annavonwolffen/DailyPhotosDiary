@@ -12,4 +12,6 @@ interface ToolbarFragment {
     )
 
     fun clearToolbarMenu()
+
+    fun setToolbarVisibility(isVisible: Boolean)
 }
