@@ -51,15 +51,15 @@ internal class AddImageViewModel(private val imagesInteractor: ImagesInteractor)
         _fileFlow.value = file
     }
 
-    fun saveImage(image: Image) {
+    fun saveImage(images: List<Image>) {
         viewModelScope.launch(exceptionHandler) {
             _progressLoaderState.value = true
-            imagesInteractor.uploadImage(TEST_FOLDER, image).also {
+            imagesInteractor.uploadImages(TEST_FOLDER, images).also {
                 _progressLoaderState.value = false
                 when (it) {
                     is Result.Success -> {
                         _imageUploadedEvent.send(State.Success(Unit))
-                        imagesInteractor.uploadFileToStorage(TEST_FOLDER, image.copy(id = it.value))
+                        imagesInteractor.uploadFilesToStorage(TEST_FOLDER, it.value)
                     }
                     is Result.Error -> {
                         _imageUploadedEvent.send(State.Error(it.errorMessage))

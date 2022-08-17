@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 interface ImagesRepository {
     fun getImagesFlow(folder: String): Flow<Result<List<Image>>>
     suspend fun getImages(folder: String): Result<List<Image>>
-    suspend fun uploadImage(folder: String, image: Image): Result<String>
-    suspend fun uploadFileToStorage(folder: String, image: Image)
+    suspend fun uploadImages(folder: String, images: List<Image>): Result<List<Image>>
+    suspend fun uploadFilesToStorage(folder: String, images: List<Image>)
     suspend fun deleteImage(folder: String, image: Image): Result<Unit>
     suspend fun deleteFileFromStorage(folder: String, image: Image)
 }

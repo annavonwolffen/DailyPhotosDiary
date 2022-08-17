@@ -188,6 +188,7 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
                     date = selectedCalendar.timeInMillis,
                     url = file?.getUriForFile(requireContext())?.toString() ?: image?.url.orEmpty()
                 ).toDomain()
+                    .let { listOf(it) }
             )
             requireActivity().hideKeyboard()
         }
