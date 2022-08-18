@@ -55,40 +55,6 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_title_when"
                 tools:text="Сегодня" />
 
-            <ImageView
-                android:id="@+id/iv_descr"
-                android:layout_width="@dimen/icon_size_default"
-                android:layout_height="@dimen/icon_size_default"
-                android:layout_marginTop="24dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_pen_36"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_date"
-                app:tint="@color/color_green_300_dark" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/image_descr_card_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:elevation="2dp"
-                app:cardCornerRadius="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
-                app:layout_constraintTop_toTopOf="@id/iv_descr">
-
-                <EditText
-                    android:id="@+id/et_image_descr"
-                    style="@style/Widget.DailyPhotosDiary.EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:hint="@string/add_image_descr"
-                    android:importantForAutofill="no"
-                    android:inputType="textMultiLine|textNoSuggestions|textAutoComplete"
-                    android:minHeight="64dp"
-                    android:padding="@dimen/padding_small" />
-            </androidx.cardview.widget.CardView>
-
             <ImageButton
                 android:id="@+id/btn_image"
                 android:layout_width="@dimen/icon_size_default"
@@ -98,19 +64,26 @@
                 android:contentDescription="@string/add_image"
                 android:src="@drawable/ic_image_plus_36"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_descr_card_view"
+                app:layout_constraintTop_toBottomOf="@+id/iv_date"
                 app:tint="@color/color_green_300_dark" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_added_image"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_added_images"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintDimensionRatio="1:1"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                android:paddingVertical="@dimen/padding_medium"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
-                app:layout_constraintTop_toTopOf="@id/btn_image"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedCorners" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_image"
+                app:layout_goneMarginTop="@dimen/margin_very_big"
+                tools:itemCount="2"
+                tools:listitem="@layout/added_images_item" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

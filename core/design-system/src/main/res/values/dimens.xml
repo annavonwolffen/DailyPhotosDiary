@@ -8,8 +8,10 @@
     <!-- paddings end-->
 
     <!-- margins -->
+    <dimen name="margin_very_small">4dp</dimen>
     <dimen name="margin_small">10dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_very_big">64dp</dimen>
 
 
     <!-- margins end -->

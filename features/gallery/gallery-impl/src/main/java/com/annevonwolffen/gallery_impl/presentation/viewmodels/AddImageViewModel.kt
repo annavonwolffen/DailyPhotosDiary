@@ -15,12 +15,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.io.File
 
 internal class AddImageViewModel(private val imagesInteractor: ImagesInteractor) : ViewModel() {
 
-    val fileFlow: StateFlow<File?> get() = _fileFlow
-    private val _fileFlow: MutableStateFlow<File?> = MutableStateFlow(null)
+    val imagesFlow: StateFlow<Set<Image>> get() = _imagesFlow
+    private val _imagesFlow: MutableStateFlow<Set<Image>> = MutableStateFlow(emptySet())
 
     val imageUploadedEvent get() = _imageUploadedEvent.receiveAsFlow()
     private val _imageUploadedEvent = Channel<State<Unit>>(CONFLATED)
@@ -47,14 +46,28 @@ internal class AddImageViewModel(private val imagesInteractor: ImagesInteractor)
         _progressLoaderState.value = false
     }
 
-    fun setFile(file: File?) {
-        _fileFlow.value = file
+    fun clearImages() {
+        _imagesFlow.value = emptySet()
     }
 
-    fun saveImage(images: List<Image>) {
+    fun addImage(image: Image) {
+        _imagesFlow.value = _imagesFlow.value.toMutableSet().apply { add(image) }
+    }
+
+    fun addImage(addImageCommand: AddImage) {
+        viewModelScope.launch { _addImageEvent.send(addImageCommand) }
+    }
+
+    fun updateImagesDate(date: Long) {
+        _imagesFlow.value = _imagesFlow.value.map { image ->
+            image.copy(date = date)
+        }.toSet()
+    }
+
+    fun saveImages() {
         viewModelScope.launch(exceptionHandler) {
             _progressLoaderState.value = true
-            imagesInteractor.uploadImages(TEST_FOLDER, images).also {
+            imagesInteractor.uploadImages(TEST_FOLDER, _imagesFlow.value.toList()).also {
                 _progressLoaderState.value = false
                 when (it) {
                     is Result.Success -> {
@@ -67,10 +80,6 @@ internal class AddImageViewModel(private val imagesInteractor: ImagesInteractor)
                 }
             }
         }
-    }
-
-    fun addImage(addImageCommand: AddImage) {
-        viewModelScope.launch { _addImageEvent.send(addImageCommand) }
     }
 
     fun deleteImage(image: Image) {
