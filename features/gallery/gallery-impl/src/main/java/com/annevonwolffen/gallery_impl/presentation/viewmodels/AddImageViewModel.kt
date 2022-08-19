@@ -64,6 +64,16 @@ internal class AddImageViewModel(private val imagesInteractor: ImagesInteractor)
         }.toSet()
     }
 
+    fun updateImageDescription(image: Image, description: String) {
+        _imagesFlow.value = _imagesFlow.value.toMutableList().apply {
+            replaceAll {
+                if (it == image && it.description.equals(description).not()) {
+                    it.copy(description = description)
+                } else it
+            }
+        }.toSet()
+    }
+
     fun saveImages() {
         viewModelScope.launch(exceptionHandler) {
             _progressLoaderState.value = true

@@ -14,6 +14,7 @@
     <string name="sort_by_date">Сортировать по дате</string>
     <string name="when">Когда?</string>
     <string name="add_image">Добавить изображение</string>
+    <string name="added_image_description">…</string>
 
     <string-array name="months_genitive">
         <item>"января"</item>

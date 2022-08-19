@@ -2,7 +2,8 @@
 <resources>
 
     <style name="ShapeAppearanceOverlay.RoundedCorners" parent="">
-        <item name="cornerSize">8dp</item>
+        <item name="cornerSizeTopLeft">8dp</item>
+        <item name="cornerSizeTopRight">8dp</item>
         <item name="cornerFamily">rounded</item>
     </style>
 
@@ -23,7 +24,7 @@
     </style>
 
     <style name="Widget.DailyPhotosDiary.EditText" parent="@style/Widget.AppCompat.EditText">
-        <item name="android:background">@color/color_white</item>
+        <item name="android:background">@drawable/gradient_add_image_description</item>
         <item name="android:textCursorDrawable">@null</item>
     </style>
 </resources>
