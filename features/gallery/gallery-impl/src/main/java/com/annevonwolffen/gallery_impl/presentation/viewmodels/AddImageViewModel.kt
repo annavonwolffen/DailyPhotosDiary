@@ -67,7 +67,7 @@ internal class AddImageViewModel(private val imagesInteractor: ImagesInteractor)
     fun updateImageDescription(image: Image, description: String) {
         _imagesFlow.value = _imagesFlow.value.toMutableList().apply {
             replaceAll {
-                if (it == image && it.description.equals(description).not()) {
+                if (it.url == image.url && it.description.equals(description).not()) {
                     it.copy(description = description)
                 } else it
             }

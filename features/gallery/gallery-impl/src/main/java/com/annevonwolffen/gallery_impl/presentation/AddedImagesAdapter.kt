@@ -16,19 +16,34 @@ internal class AddedImagesAdapter(
 ) :
     ListAdapter<Image, AddedImagesAdapter.ViewHolder>(DiffUtilCallback()) {
 
+    class DiffUtilCallback : DiffUtil.ItemCallback<Image>() {
+        override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean =
+            oldItem.id == newItem.id && oldItem.url == newItem.url
+
+        override fun areContentsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem == newItem
+
+        override fun getChangePayload(oldItem: Image, newItem: Image): Any? {
+            if (oldItem.description != newItem.description) {
+                return Payload.DESCRIPTION
+            }
+            return null
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = AddedImagesItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding, imageLoader, onDescriptionChanged)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNotEmpty() && payloads[0] == Payload.DESCRIPTION) {
+            return
+        }
+        super.onBindViewHolder(holder, position, payloads)
     }
 
-    class DiffUtilCallback : DiffUtil.ItemCallback<Image>() {
-        override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem.id == newItem.id
-
-        override fun areContentsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem == newItem
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
     class ViewHolder(
@@ -38,12 +53,15 @@ internal class AddedImagesAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(image: Image) {
-            // TODO: parse payloads to not update image on description change (because it was changed in edit text itself)
             imageLoader.loadImage(binding.ivAddedImage, image.url)
             binding.etAddedImageDescription.setText(image.description)
             binding.etAddedImageDescription.doAfterTextChanged { text ->
                 onDescriptionChanged.invoke(image, text.toString())
             }
         }
+    }
+
+    enum class Payload {
+        DESCRIPTION
     }
 }
