@@ -26,7 +26,7 @@ class AuthorizationFragment : Fragment() {
 
         requireActivity().setStatusBarColor(com.annevonwolffen.design_system.R.color.color_green_300_dark)
 
-        view.findViewById<AppBarLayout>(R.id.appbar).doOnApplyWindowInsets { topInset, _ ->
+        view.findViewById<AppBarLayout>(R.id.appbar).doOnApplyWindowInsets { topInset, _, _ ->
             updatePadding(top = topInset)
         }
 

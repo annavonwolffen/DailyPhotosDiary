@@ -84,7 +84,7 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         addImageButton = binding.btnAddImage
         addImageButton.setOnClickListener { addOrEditImage(null) }
         shimmerLayout = binding.shimmerLayout.root
-        binding.btnAddImage.doOnApplyWindowInsets { _, bottomInset ->
+        binding.btnAddImage.doOnApplyWindowInsets { _, bottomInset, _ ->
             updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomMargin = resources.getDimensionPixelOffset(DesignR.dimen.margin_medium) + bottomInset
             }
@@ -107,7 +107,7 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
             }
         }
         adapter.registerAdapterDataObserver(adapterDataObserver)
-        recyclerView.doOnApplyWindowInsets { _, bottomInset ->
+        recyclerView.doOnApplyWindowInsets { _, bottomInset, _ ->
             updatePadding(bottom = resources.getDimensionPixelOffset(DesignR.dimen.padding_medium) + bottomInset)
         }
     }

@@ -62,7 +62,7 @@ internal class ImageFragment : Fragment(R.layout.fragment_image) {
             isFullScreen = isFullScreen.not()
         }
 
-        rootLayout.doOnApplyWindowInsets { topInset, _ ->
+        rootLayout.doOnApplyWindowInsets { topInset, _, _ ->
             if (topInset != 0) {
                 statusBarSize = topInset
             }

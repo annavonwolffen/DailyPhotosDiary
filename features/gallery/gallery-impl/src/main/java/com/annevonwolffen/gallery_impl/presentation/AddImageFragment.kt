@@ -121,6 +121,14 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
     }
 
     private fun initViews() {
+        binding.scrollContainer.apply {
+            doOnApplyWindowInsets { _, _, keyBoardInset ->
+                updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    bottomMargin = keyBoardInset
+                }
+            }
+        }
+
         progressLoader = binding.progressLayout
         setupDateField()
         setupAddImageButton()
@@ -178,7 +186,7 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
         binding.btnDelete.apply {
             setVisibility(imageToEdit?.id != null)
             imageToEdit?.let { im -> setOnClickListener { viewModel.deleteImage(im.toDomain()) } }
-            doOnApplyWindowInsets { _, bottomInset ->
+            doOnApplyWindowInsets { _, bottomInset, _ ->
                 updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin =
                         resources.getDimensionPixelOffset(com.annevonwolffen.design_system.R.dimen.margin_medium) + bottomInset
