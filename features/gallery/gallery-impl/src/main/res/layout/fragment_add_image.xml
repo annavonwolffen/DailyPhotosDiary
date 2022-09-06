@@ -17,11 +17,11 @@
             android:paddingTop="24dp">
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
+                android:id="@+id/guideline_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="48dp" />
+                app:layout_constraintGuide_begin="@dimen/margin_medium" />
 
             <ImageView
                 android:id="@+id/iv_date"
@@ -29,7 +29,7 @@
                 android:layout_height="@dimen/icon_size_default"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_calendar_36"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline_start"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/color_green_300_dark" />
 
@@ -38,9 +38,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/when"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:textAppearance="@style/TextAppearance.DailyPhotosDiary.Caption"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintStart_toEndOf="@id/iv_date"
                 app:layout_constraintTop_toTopOf="@id/iv_date" />
 
             <TextView
@@ -51,7 +52,7 @@
                 android:freezesText="true"
                 android:textAppearance="@style/TextAppearance.DailyPhotosDiary.Default.Colored"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="@id/tv_title_when"
                 app:layout_constraintTop_toBottomOf="@id/tv_title_when"
                 tools:text="Сегодня" />
 
@@ -63,11 +64,12 @@
                 android:background="@null"
                 android:contentDescription="@string/add_image"
                 android:src="@drawable/ic_image_plus_36"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline_start"
                 app:layout_constraintTop_toBottomOf="@+id/iv_date"
                 app:tint="@color/color_green_300_dark" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:paddingHorizontal="@dimen/padding_medium"
                 android:id="@+id/rv_added_images"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

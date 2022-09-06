@@ -24,7 +24,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.annevonwolffen.coroutine_utils_api.extension.launchFlowCollection
 import com.annevonwolffen.design_system.extensions.doOnApplyWindowInsets
 import com.annevonwolffen.design_system.extensions.hideKeyboard
@@ -74,7 +74,6 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
 
     private lateinit var dateTextView: TextView
     private lateinit var progressLoader: FrameLayout
-    private lateinit var recyclerView: RecyclerView
     private lateinit var addedImagesAdapter: AddedImagesAdapter
 
     private var selectedCalendar: Calendar = Calendar.getInstance()
@@ -175,11 +174,13 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
     }
 
     private fun setupRecyclerView() {
-        recyclerView = binding.rvAddedImages
         addedImagesAdapter = AddedImagesAdapter(getFeature(UiUtilsApi::class).imageLoader) { image, text ->
             viewModel.updateImageDescription(image.toDomain(), text)
         }
-        recyclerView.adapter = addedImagesAdapter
+        binding.rvAddedImages.apply {
+            adapter = addedImagesAdapter
+            LinearSnapHelper().attachToRecyclerView(this)
+        }
     }
 
     private fun setupDeleteButton() {
