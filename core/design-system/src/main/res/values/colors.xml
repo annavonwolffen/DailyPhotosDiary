@@ -9,4 +9,5 @@
     <color name="color_gray_150">#F5F5F6</color>
     <color name="color_gray_300">#E0E0E0</color>
     <color name="color_primary_text">#000000</color>
+    <color name="color_red_800">#C62828</color>
 </resources>

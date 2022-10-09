@@ -174,9 +174,11 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
     }
 
     private fun setupRecyclerView() {
-        addedImagesAdapter = AddedImagesAdapter(getFeature(UiUtilsApi::class).imageLoader) { image, text ->
-            viewModel.updateImageDescription(image.toDomain(), text)
-        }
+        addedImagesAdapter = AddedImagesAdapter(
+            getFeature(UiUtilsApi::class).imageLoader,
+            { image, text -> viewModel.updateImageDescription(image.toDomain(), text) },
+            { image -> viewModel.removeImageFromAdded(image.toDomain()) }
+        )
         binding.rvAddedImages.apply {
             adapter = addedImagesAdapter
             LinearSnapHelper().attachToRecyclerView(this)

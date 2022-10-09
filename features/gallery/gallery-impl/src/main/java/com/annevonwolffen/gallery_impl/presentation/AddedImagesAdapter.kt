@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.annevonwolffen.gallery_impl.databinding.AddedImagesItemBinding
@@ -12,9 +13,9 @@ import com.annevonwolffen.ui_utils_api.image.ImageLoader
 
 internal class AddedImagesAdapter(
     private val imageLoader: ImageLoader,
-    private val onDescriptionChanged: (Image, String) -> Unit
-) :
-    ListAdapter<Image, AddedImagesAdapter.ViewHolder>(DiffUtilCallback()) {
+    private val onDescriptionChanged: (Image, String) -> Unit,
+    private val onRemoveFromAdded: (Image) -> Unit
+) : ListAdapter<Image, AddedImagesAdapter.ViewHolder>(DiffUtilCallback()) {
 
     class DiffUtilCallback : DiffUtil.ItemCallback<Image>() {
         override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean =
@@ -44,6 +45,12 @@ internal class AddedImagesAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        ItemTouchHelper(DragCallback { position -> onRemoveFromAdded(getItem(position)) })
+            .attachToRecyclerView(recyclerView)
     }
 
     class ViewHolder(

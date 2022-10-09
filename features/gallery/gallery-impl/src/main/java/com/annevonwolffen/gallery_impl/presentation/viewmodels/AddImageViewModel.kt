@@ -74,6 +74,10 @@ internal class AddImageViewModel(private val imagesInteractor: ImagesInteractor)
         }.toSet()
     }
 
+    fun removeImageFromAdded(image: Image) {
+        _imagesFlow.value = _imagesFlow.value.toMutableSet().apply { remove(image) }
+    }
+
     fun saveImages() {
         viewModelScope.launch(exceptionHandler) {
             _progressLoaderState.value = true
