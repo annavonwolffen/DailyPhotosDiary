@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.AddedImagesItemBinding
 import com.annevonwolffen.gallery_impl.presentation.models.Image
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
@@ -16,6 +17,8 @@ internal class AddedImagesAdapter(
     private val onDescriptionChanged: (Image, String) -> Unit,
     private val onRemoveFromAdded: (Image) -> Unit
 ) : ListAdapter<Image, AddedImagesAdapter.ViewHolder>(DiffUtilCallback()) {
+
+    private lateinit var dragCallback: DragCallback
 
     class DiffUtilCallback : DiffUtil.ItemCallback<Image>() {
         override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean =
@@ -49,8 +52,15 @@ internal class AddedImagesAdapter(
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        ItemTouchHelper(DragCallback { position -> onRemoveFromAdded(getItem(position)) })
-            .attachToRecyclerView(recyclerView)
+        dragCallback = DragCallback(recyclerView.rootView.findViewById(R.id.btn_cancel_add)) { position ->
+            onRemoveFromAdded(getItem(position))
+        }
+        ItemTouchHelper(dragCallback).attachToRecyclerView(recyclerView)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        dragCallback.removeIcon = null
     }
 
     class ViewHolder(

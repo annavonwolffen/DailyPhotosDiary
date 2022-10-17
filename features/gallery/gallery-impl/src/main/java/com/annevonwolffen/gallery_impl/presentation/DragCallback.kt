@@ -2,27 +2,26 @@ package com.annevonwolffen.gallery_impl.presentation
 
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
-import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_IDLE
 import androidx.recyclerview.widget.ItemTouchHelper.DOWN
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.RecyclerView
-import com.annevonwolffen.gallery_impl.R
+import com.annevonwolffen.gallery_impl.presentation.DragCallback.RemoveDragState.Dragging
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 
-internal class DragCallback(private val onRemoveImage: (imagePosition: Int) -> Unit) :
+internal class DragCallback(
+    internal var removeIcon: ImageView?,
+    private val onRemoveImage: (imagePosition: Int) -> Unit
+) :
     ItemTouchHelper.SimpleCallback(RIGHT or LEFT or DOWN, 0) {
 
-    private lateinit var removeBinImage: ImageView
     private val imageRect = Rect()
     private val removeBinRect = Rect()
-
-    private var inDeleteArea = false
-    private var isToBeRemoved = false
 
     override fun isLongPressDragEnabled(): Boolean = true
 
@@ -38,16 +37,6 @@ internal class DragCallback(private val onRemoveImage: (imagePosition: Int) -> U
         // Do nothing
     }
 
-    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        super.onSelectedChanged(viewHolder, actionState)
-
-        if (actionState == ACTION_STATE_IDLE) {
-            if (inDeleteArea) {
-                isToBeRemoved = true
-            }
-        }
-    }
-
     override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,
@@ -59,42 +48,80 @@ internal class DragCallback(private val onRemoveImage: (imagePosition: Int) -> U
     ) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
 
-        if (isToBeRemoved) {
-            onRemoveImage.invoke(viewHolder.absoluteAdapterPosition)
-            viewHolder.itemView.setVisibility(false)
-            removeBinImage.setVisibility(false)
-            isToBeRemoved = false
-        }
-
-        if (::removeBinImage.isInitialized.not()) {
-            removeBinImage = recyclerView.rootView.findViewById(R.id.btn_cancel_add)
-        }
-        if (::removeBinImage.isInitialized && actionState == ACTION_STATE_DRAG && isCurrentlyActive) {
-            removeBinImage.setVisibility(true)
-        }
-
         val itemView = viewHolder.itemView
-
         itemView.getDrawingRect(imageRect)
         imageRect.offset(recyclerView.x.toInt() + dX.toInt(), recyclerView.y.toInt() + dY.toInt())
-        removeBinImage.getDrawingRect(removeBinRect)
-        removeBinRect.offset(removeBinImage.x.toInt(), removeBinImage.y.toInt())
-
-
-        if (Rect.intersects(imageRect, removeBinRect)) {
-            itemView.alpha = 0.5f
-            removeBinImage.imageTintList = ContextCompat.getColorStateList(
-                itemView.context,
-                com.annevonwolffen.design_system.R.color.color_red_800
-            )
-            inDeleteArea = true
-        } else {
-            inDeleteArea = false
-            viewHolder.itemView.alpha = 1f
-            removeBinImage.imageTintList = ContextCompat.getColorStateList(
-                itemView.context,
-                com.annevonwolffen.design_system.R.color.color_green_300_dark
-            )
+        removeIcon?.let {
+            it.getDrawingRect(removeBinRect)
+            removeBinRect.offset(it.x.toInt(), it.y.toInt())
         }
+
+        val state: RemoveDragState = if (Rect.intersects(imageRect, removeBinRect)) {
+            when {
+                isCurrentlyActive -> {
+                    RemoveDragState.DraggingInRemoveArea(viewHolder.itemView)
+                }
+                itemView.isVisible -> {
+                    RemoveDragState.DroppedInRemoveArea(viewHolder)
+                }
+                else -> {
+                    RemoveDragState.StoppedDragging(viewHolder.itemView)
+                }
+            }
+        } else {
+            if (isCurrentlyActive) {
+                Dragging(viewHolder.itemView)
+            } else {
+                RemoveDragState.StoppedDragging(viewHolder.itemView)
+            }
+        }
+        render(state)
+    }
+
+    private fun render(state: RemoveDragState) {
+        when (state) {
+            is Dragging -> {
+                state.itemView.alpha = HALF_TRANSPARENT_ALPHA
+                removeIcon?.apply {
+                    setVisibility(true)
+                    imageTintList = ContextCompat.getColorStateList(
+                        context,
+                        com.annevonwolffen.design_system.R.color.color_green_300_dark
+                    )
+                }
+            }
+            is RemoveDragState.DraggingInRemoveArea -> {
+                state.itemView.alpha = HALF_TRANSPARENT_ALPHA
+                removeIcon?.apply {
+                    setVisibility(true)
+                    imageTintList = ContextCompat.getColorStateList(
+                        context,
+                        com.annevonwolffen.design_system.R.color.color_red_800
+                    )
+                }
+            }
+            is RemoveDragState.DroppedInRemoveArea -> {
+                val viewHolder = state.viewHolder
+                onRemoveImage.invoke(viewHolder.absoluteAdapterPosition)
+                viewHolder.itemView.setVisibility(false)
+                removeIcon?.setVisibility(false)
+            }
+            is RemoveDragState.StoppedDragging -> {
+                state.itemView.alpha = NOT_TRANSPARENT_ALPHA
+                removeIcon?.setVisibility(false)
+            }
+        }
+    }
+
+    sealed class RemoveDragState {
+        data class Dragging(val itemView: View) : RemoveDragState()
+        data class DraggingInRemoveArea(val itemView: View) : RemoveDragState()
+        data class DroppedInRemoveArea(val viewHolder: RecyclerView.ViewHolder) : RemoveDragState()
+        data class StoppedDragging(val itemView: View) : RemoveDragState()
+    }
+
+    private companion object {
+        const val NOT_TRANSPARENT_ALPHA = 1f
+        const val HALF_TRANSPARENT_ALPHA = 0.5f
     }
 }

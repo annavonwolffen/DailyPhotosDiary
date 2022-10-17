@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_container"
@@ -37,8 +37,8 @@
                 android:id="@+id/tv_title_when"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/when"
                 android:layout_marginStart="@dimen/margin_medium"
+                android:text="@string/when"
                 android:textAppearance="@style/TextAppearance.DailyPhotosDiary.Caption"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_date"
@@ -81,7 +81,6 @@
                 tools:visibility="visible" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:paddingHorizontal="@dimen/padding_medium"
                 android:id="@+id/rv_added_images"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -89,8 +88,9 @@
                 android:clipToPadding="false"
                 android:orientation="horizontal"
                 android:overScrollMode="never"
+                android:paddingHorizontal="@dimen/padding_medium"
                 android:paddingTop="@dimen/padding_medium"
-                android:paddingBottom="72dp"
+                android:paddingBottom="92dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
