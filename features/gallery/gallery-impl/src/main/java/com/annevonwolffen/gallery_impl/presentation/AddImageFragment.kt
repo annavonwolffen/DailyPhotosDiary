@@ -177,7 +177,8 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
         addedImagesAdapter = AddedImagesAdapter(
             getFeature(UiUtilsApi::class).imageLoader,
             { image, text -> viewModel.updateImageDescription(image.toDomain(), text) },
-            { image -> viewModel.removeImageFromAdded(image.toDomain()) }
+            { image -> viewModel.removeImageFromAdded(image.toDomain()) },
+            imageToEdit == null
         )
         binding.rvAddedImages.apply {
             adapter = addedImagesAdapter
