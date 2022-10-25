@@ -14,7 +14,10 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickMultipleVisualMedia
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
@@ -80,14 +83,21 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
 
     private var currentCreatedPhotoFile: File? = null
 
+    private val pickMultipleImages = registerForActivityResult(PickMultipleVisualMedia()) { uris ->
+        if (uris.isNotEmpty()) {
+            val images = uris
+                .map { uri -> createFileFromUri(uri, requireContext()) }
+                .map { file -> constructImageFromFile(file).toDomain() }
+            viewModel.addImages(images)
+        } else {
+            Log.d(TAG, "PhotoPicker: No media selected")
+        }
+        viewModel.dismissBottomSheet()
+    }
+
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val createdImageFile: File? = result.data?.data?.let {
-                createFileFromUri(it, requireContext())
-            }
-                ?: currentCreatedPhotoFile
-
-            createdImageFile?.let { file ->
+            currentCreatedPhotoFile?.let { file ->
                 viewModel.addImage(
                     constructImageFromFile(file).toDomain()
                 )
@@ -279,8 +289,7 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
     }
 
     private fun selectImageFromGallery() {
-        val pickImageIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        resultLauncher.launch(pickImageIntent)
+        pickMultipleImages.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
 
     private fun takePhotoFromCamera() {

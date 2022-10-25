@@ -50,8 +50,12 @@ internal class AddImageViewModel(private val imagesInteractor: ImagesInteractor)
         _imagesFlow.value = emptySet()
     }
 
+    fun addImages(images: List<Image>) {
+        _imagesFlow.value = _imagesFlow.value.toMutableSet().apply { addAll(images) }
+    }
+
     fun addImage(image: Image) {
-        _imagesFlow.value = _imagesFlow.value.toMutableSet().apply { add(image) }
+        addImages(listOf(image))
     }
 
     fun addImage(addImageCommand: AddImage) {
