@@ -1,11 +1,7 @@
 package com.annevonwolffen.gallery_impl.presentation
 
-import android.app.Activity
 import android.app.DatePickerDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -65,8 +61,7 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
         ViewModelProviderFactory {
             AddImageViewModel(
                 getInnerFeature(
-                    GalleryExternalApi::class,
-                    GalleryInternalApi::class
+                    GalleryExternalApi::class, GalleryInternalApi::class
                 ).imagesInteractor
             )
         }
@@ -83,10 +78,9 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
 
     private var currentCreatedPhotoFile: File? = null
 
-    private val pickMultipleImages = registerForActivityResult(PickMultipleVisualMedia()) { uris ->
+    private val pickMultipleImagesLauncher = registerForActivityResult(PickMultipleVisualMedia()) { uris ->
         if (uris.isNotEmpty()) {
-            val images = uris
-                .map { uri -> createFileFromUri(uri, requireContext()) }
+            val images = uris.map { uri -> createFileFromUri(uri, requireContext()) }
                 .map { file -> constructImageFromFile(file).toDomain() }
             viewModel.addImages(images)
         } else {
@@ -95,12 +89,10 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
         viewModel.dismissBottomSheet()
     }
 
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+    private val takePhotoLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+        if (isSuccess) {
             currentCreatedPhotoFile?.let { file ->
-                viewModel.addImage(
-                    constructImageFromFile(file).toDomain()
-                )
+                viewModel.addImage(constructImageFromFile(file).toDomain())
             }
             viewModel.dismissBottomSheet()
         } else {
@@ -110,8 +102,8 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        selectedCalendar = savedInstanceState?.getSerializable(SELECTED_CALENDAR) as? Calendar
-            ?: imageToEdit?.date?.toCalendar()
+        selectedCalendar =
+            savedInstanceState?.getSerializable(SELECTED_CALENDAR) as? Calendar ?: imageToEdit?.date?.toCalendar()
                 ?: Calendar.getInstance()
         if (savedInstanceState == null) {
             viewModel.clearImages()
@@ -158,21 +150,19 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
         val todayCalendar = Calendar.getInstance()
         dateTextView = binding.tvDate
         if (dateTextView.text.isEmpty()) {
-            dateTextView.text =
-                selectedCalendar.takeIf { !it.isEqualByDate(todayCalendar) }?.toDateString(resources)
-                    ?: getString(R.string.today)
+            dateTextView.text = selectedCalendar.takeIf { !it.isEqualByDate(todayCalendar) }?.toDateString(resources)
+                ?: getString(R.string.today)
         }
         dateTextView.setOnClickListener {
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, dayOfMonth ->
                     selectedCalendar = Calendar.getInstance().also { it.set(year, month, dayOfMonth) }
-                    dateTextView.text =
-                        if (selectedCalendar.isEqualByDate(todayCalendar)) {
-                            getString(R.string.today)
-                        } else {
-                            selectedCalendar.toDateString(resources)
-                        }
+                    dateTextView.text = if (selectedCalendar.isEqualByDate(todayCalendar)) {
+                        getString(R.string.today)
+                    } else {
+                        selectedCalendar.toDateString(resources)
+                    }
                 },
                 selectedCalendar.get(Calendar.YEAR),
                 selectedCalendar.get(Calendar.MONTH),
@@ -273,40 +263,26 @@ class AddImageFragment : Fragment(R.layout.fragment_add_image) {
             }
             is State.Error -> {
                 Toast.makeText(
-                    activity,
-                    "$errorMessage: ${state.errorMessage}",
-                    Toast.LENGTH_LONG
+                    activity, "$errorMessage: ${state.errorMessage}", Toast.LENGTH_LONG
                 ).show()
             }
             else -> {
                 Toast.makeText(
-                    activity,
-                    errorMessage,
-                    Toast.LENGTH_LONG
+                    activity, errorMessage, Toast.LENGTH_LONG
                 ).show()
             }
         }
     }
 
     private fun selectImageFromGallery() {
-        pickMultipleImages.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
+        pickMultipleImagesLauncher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
 
     private fun takePhotoFromCamera() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePhotoIntent ->
-            takePhotoIntent.resolveActivity(requireActivity().packageManager)?.also {
-                val photoFile: File? =
-                    kotlin.runCatching { createImageFile(requireContext()) }
-                        .onFailure { Log.d(TAG, "Ошибка при создании файла.") }
-                        .getOrNull()
-                photoFile?.also {
-                    currentCreatedPhotoFile = it
-                    val photoURI: Uri = it.getUriForFile(requireContext())
-                    takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    resultLauncher.launch(takePhotoIntent)
-                }
-            }
-        }
+        runCatching { createImageFile(requireContext()) }.onSuccess { file ->
+            currentCreatedPhotoFile = file
+            takePhotoLauncher.launch(file.getUriForFile(requireContext()))
+        }.onFailure { Log.d(TAG, "Ошибка при создании файла.") }.getOrNull()
     }
 
     private fun constructImageFromFile(file: File): Image =
