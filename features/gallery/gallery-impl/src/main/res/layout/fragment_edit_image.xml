@@ -56,49 +56,17 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_title_when"
                 tools:text="Сегодня" />
 
-            <ImageButton
-                android:id="@+id/btn_image"
-                android:layout_width="@dimen/icon_size_default"
-                android:layout_height="@dimen/icon_size_default"
-                android:layout_marginTop="24dp"
-                android:background="@null"
-                android:contentDescription="@string/add_image"
-                android:src="@drawable/ic_image_plus_36"
-                app:layout_constraintStart_toStartOf="@id/guideline_start"
-                app:layout_constraintTop_toBottomOf="@+id/iv_date"
-                app:tint="@color/color_green_300_dark" />
-
-            <ImageView
-                android:id="@+id/btn_cancel_add"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:src="@drawable/ic_delete_24"
-                android:tint="@color/color_green_300_dark"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/rv_added_images"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="visible" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_added_images"
+            <include
+                android:id="@+id/edit_image"
+                layout="@layout/added_images_item"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:overScrollMode="never"
-                android:paddingHorizontal="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_medium"
-                android:paddingBottom="92dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_marginHorizontal="@dimen/padding_medium"
+                android:layout_marginTop="@dimen/margin_very_big"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_image"
-                app:layout_goneMarginTop="@dimen/margin_very_big"
-                tools:itemCount="2"
-                tools:listitem="@layout/added_images_item" />
+                app:layout_constraintTop_toBottomOf="@id/iv_date" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

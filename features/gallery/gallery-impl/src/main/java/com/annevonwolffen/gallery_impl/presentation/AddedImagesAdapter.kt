@@ -15,8 +15,7 @@ import com.annevonwolffen.ui_utils_api.image.ImageLoader
 internal class AddedImagesAdapter(
     private val imageLoader: ImageLoader,
     private val onDescriptionChanged: (Image, String) -> Unit,
-    private val onRemoveFromAdded: (Image) -> Unit,
-    private val isDraggingEnabled: Boolean
+    private val onRemoveFromAdded: (Image) -> Unit
 ) : ListAdapter<Image, AddedImagesAdapter.ViewHolder>(DiffUtilCallback()) {
 
     private var dragCallback: DragCallback? = null
@@ -53,11 +52,9 @@ internal class AddedImagesAdapter(
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        if (isDraggingEnabled) {
-            dragCallback = DragCallback(recyclerView.rootView.findViewById(R.id.btn_cancel_add)) { position ->
-                onRemoveFromAdded(getItem(position))
-            }.also { ItemTouchHelper(it).attachToRecyclerView(recyclerView) }
-        }
+        dragCallback = DragCallback(recyclerView.rootView.findViewById(R.id.btn_cancel_add)) { position ->
+            onRemoveFromAdded(getItem(position))
+        }.also { ItemTouchHelper(it).attachToRecyclerView(recyclerView) }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {

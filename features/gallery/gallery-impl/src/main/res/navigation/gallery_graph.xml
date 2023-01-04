@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation android:id="@id/gallery_graph"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@id/gallery_graph"
     app:startDestination="@id/gallery_fragment">
 
     <fragment
@@ -12,18 +12,19 @@
         tools:layout="@layout/fragment_gallery">
 
         <action
-            android:id="@+id/action_toAddImage"
-            app:destination="@id/add_image_fragment">
-
-            <argument
-                android:name="toolbar_title"
-                app:argType="string" />
+            android:id="@+id/action_toEditImage"
+            app:destination="@id/edit_image_fragment">
 
             <argument
                 android:name="image"
-                android:defaultValue="@null"
                 app:argType="com.annevonwolffen.gallery_impl.presentation.models.Image"
-                app:nullable="true" />
+                app:nullable="false" />
+
+        </action>
+
+        <action
+            android:id="@+id/action_toAddImages"
+            app:destination="@id/add_images_fragment">
 
         </action>
 
@@ -40,24 +41,27 @@
     </fragment>
 
     <fragment
-        android:id="@+id/add_image_fragment"
-        android:name="com.annevonwolffen.gallery_impl.presentation.AddImageFragment"
-        android:label="{toolbar_title}"
-        tools:layout="@layout/fragment_add_image">
+        android:id="@+id/edit_image_fragment"
+        android:name="com.annevonwolffen.gallery_impl.presentation.EditImageFragment"
+        android:label="@string/edit_image_title"
+        tools:layout="@layout/fragment_edit_image">
+
+        <argument
+            android:name="image"
+            app:argType="com.annevonwolffen.gallery_impl.presentation.models.Image"
+            app:nullable="false" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/add_images_fragment"
+        android:name="com.annevonwolffen.gallery_impl.presentation.AddImagesFragment"
+        android:label="@string/add_image_title"
+        tools:layout="@layout/fragment_add_images">
 
         <action
             android:id="@+id/action_toAddImageBottomSheet"
             app:destination="@id/add_image_bottomsheet" />
-
-        <argument
-            android:name="toolbar_title"
-            app:argType="string" />
-
-        <argument
-            android:name="image"
-            android:defaultValue="@null"
-            app:argType="com.annevonwolffen.gallery_impl.presentation.models.Image"
-            app:nullable="true" />
 
     </fragment>
 

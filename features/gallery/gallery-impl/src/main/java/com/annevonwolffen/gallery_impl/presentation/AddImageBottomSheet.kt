@@ -12,7 +12,7 @@ import com.annevonwolffen.gallery_api.di.GalleryExternalApi
 import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.BottomsheetAddImageBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
-import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImageViewModel
+import com.annevonwolffen.gallery_impl.presentation.viewmodels.AddImagesViewModel
 import com.annevonwolffen.ui_utils_api.extensions.fragmentViewBinding
 import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -24,9 +24,9 @@ class AddImageBottomSheet : BottomSheetDialogFragment() {
 
     private val binding: BottomsheetAddImageBinding by fragmentViewBinding(BottomsheetAddImageBinding::bind)
 
-    private val viewModel: AddImageViewModel by navGraphViewModels(NavR.id.gallery_graph) {
+    private val viewModel: AddImagesViewModel by navGraphViewModels(NavR.id.gallery_graph) {
         ViewModelProviderFactory {
-            AddImageViewModel(
+            AddImagesViewModel(
                 getInnerFeature(
                     GalleryExternalApi::class,
                     GalleryInternalApi::class

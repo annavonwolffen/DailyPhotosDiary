@@ -9,9 +9,10 @@ data class Image(
     val id: String? = null,
     val name: String,
     val description: String? = null,
-    val date: Long,
-    val url: String
+    val date: Long?,
+    val url: String,
+    val orderWithinDateGroup: OrderInDateGroup? = null
 ) : Parcelable
 
-fun Image.toDomain(): DomainImage = DomainImage(id, name, description, date, url)
+fun Image.toDomain(): DomainImage = DomainImage(id, name, description, date ?: 0L, url, orderWithinDateGroup)
 fun DomainImage.toPresentation() = Image(id, name, description, date, url)

@@ -27,7 +27,6 @@ import com.annevonwolffen.gallery_impl.R
 import com.annevonwolffen.gallery_impl.databinding.FragmentGalleryBinding
 import com.annevonwolffen.gallery_impl.di.GalleryInternalApi
 import com.annevonwolffen.gallery_impl.domain.settings.SortOrder
-import com.annevonwolffen.gallery_impl.presentation.models.Image
 import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import com.annevonwolffen.gallery_impl.presentation.viewmodels.GalleryViewModel
 import com.annevonwolffen.mainscreen_api.ToolbarFragment
@@ -36,7 +35,6 @@ import com.annevonwolffen.ui_utils_api.extensions.fragmentViewBinding
 import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 import com.annevonwolffen.ui_utils_api.viewmodel.ViewModelProviderFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import com.annevonwolffen.design_system.R as DesignR
 
@@ -82,7 +80,9 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
     private fun initViews() {
         errorBanner = binding.errorBanner
         addImageButton = binding.btnAddImage
-        addImageButton.setOnClickListener { addOrEditImage(null) }
+        addImageButton.setOnClickListener {
+            findNavController().navigate(GalleryFragmentDirections.actionToAddImages())
+        }
         shimmerLayout = binding.shimmerLayout.root
         binding.btnAddImage.doOnApplyWindowInsets { _, bottomInset, _ ->
             updateLayoutParams<ViewGroup.MarginLayoutParams> {
@@ -96,7 +96,11 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         adapter =
             ImagesGroupListAdapter(
                 getFeature(UiUtilsApi::class).imageLoader,
-                { image -> addOrEditImage(image) },
+                { image ->
+                    findNavController().navigate(
+                        GalleryFragmentDirections.actionToEditImage(image)
+                    )
+                },
                 { url, date -> openImage(url, date) }
             )
         recyclerView.adapter = adapter
@@ -110,17 +114,6 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         recyclerView.doOnApplyWindowInsets { _, bottomInset, _ ->
             updatePadding(bottom = resources.getDimensionPixelOffset(DesignR.dimen.padding_medium) + bottomInset)
         }
-    }
-
-    private fun addOrEditImage(image: Image?) {
-        findNavController().navigate(
-            GalleryFragmentDirections.actionToAddImage(
-                resources.getString(
-                    if (image == null) R.string.add_image_title else R.string.edit_image_title
-                ),
-                image
-            )
-        )
     }
 
     private fun openImage(url: String, dateString: String) {
@@ -163,11 +156,13 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
     private fun updateAddImageButtonState(isEnabled: Boolean) {
         addImageButton.isEnabled = isEnabled
         addImageButton.setBackgroundColor(
-            if (isEnabled) {
-                DesignR.color.color_green_300_dark
-            } else {
-                R.color.gray_500
-            }
+            resources.getColor(
+                if (isEnabled) {
+                    DesignR.color.color_green_300_dark
+                } else {
+                    R.color.gray_500
+                }, requireContext().theme
+            )
         )
     }
 

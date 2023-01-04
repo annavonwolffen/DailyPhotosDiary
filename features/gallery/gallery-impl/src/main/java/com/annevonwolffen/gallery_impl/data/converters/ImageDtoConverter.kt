@@ -11,7 +11,8 @@ internal object ImageDtoConverter {
                 name.orEmpty(),
                 description.orEmpty(),
                 createdAt ?: 0L,
-                url.orEmpty()
+                url.orEmpty(),
+                orderWithinDateGroup
             )
         }
 
@@ -22,7 +23,8 @@ internal object ImageDtoConverter {
                 name = name,
                 description = description,
                 createdAt = date,
-                url = url
+                url = url,
+                orderWithinDateGroup = orderWithinDateGroup
             )
         }
 }
