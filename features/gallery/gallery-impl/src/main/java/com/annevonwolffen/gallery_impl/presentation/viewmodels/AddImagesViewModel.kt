@@ -21,12 +21,19 @@ internal class AddImagesViewModel(imagesInteractor: ImagesInteractor) :
         viewModelScope.launch { _addImageEvent.send(addImageCommand) }
     }
 
+    fun moveImage(prevPosition: Int, newPosition: Int) {
+        _imagesFlow.value = _imagesFlow.value.toMutableList().apply {
+            val item = this[prevPosition]
+            remove(item)
+            add(newPosition, item)
+        }
+    }
+
     fun removeImageFromAdded(image: Image) {
-        _imagesFlow.value = _imagesFlow.value.toMutableSet().apply { remove(image) }
+        _imagesFlow.value = _imagesFlow.value.toMutableList().apply { remove(image) }
     }
 
     fun dismissBottomSheet() {
         viewModelScope.launch { _dismissBottomSheetEvent.send(Unit) }
     }
-
 }

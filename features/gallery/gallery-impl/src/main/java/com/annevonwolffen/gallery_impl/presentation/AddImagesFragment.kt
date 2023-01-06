@@ -105,10 +105,10 @@ internal class AddImagesFragment : Fragment(R.layout.fragment_add_images) {
     }
 
     private fun setupRecyclerView() {
-        addedImagesAdapter = AddedImagesAdapter(
-            FeatureProvider.getFeature(UiUtilsApi::class).imageLoader,
+        addedImagesAdapter = AddedImagesAdapter(FeatureProvider.getFeature(UiUtilsApi::class).imageLoader,
             { image, text -> viewModel.updateImageDescription(image, text) },
-            { image -> viewModel.removeImageFromAdded(image) }
+            { image -> viewModel.removeImageFromAdded(image) },
+            { prevPos, newPos -> viewModel.moveImage(prevPos, newPos) }
         )
         binding.rvAddedImages.apply {
             adapter = addedImagesAdapter

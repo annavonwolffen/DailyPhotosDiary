@@ -16,7 +16,8 @@ import com.annevonwolffen.ui_utils_api.extensions.setVisibility
 
 internal class DragCallback(
     internal var removeIcon: ImageView?,
-    private val onRemoveImage: (imagePosition: Int) -> Unit
+    private val onRemoveImage: (imagePosition: Int) -> Unit,
+    private val onMoveImage: (prevPosition: Int, newPosition: Int) -> Unit
 ) :
     ItemTouchHelper.SimpleCallback(RIGHT or LEFT or DOWN, 0) {
 
@@ -30,6 +31,7 @@ internal class DragCallback(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
+        onMoveImage(viewHolder.bindingAdapterPosition, target.bindingAdapterPosition)
         return true
     }
 

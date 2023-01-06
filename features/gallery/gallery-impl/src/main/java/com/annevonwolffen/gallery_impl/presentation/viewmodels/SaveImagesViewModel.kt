@@ -16,8 +16,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 internal open class SaveImagesViewModel(private val imagesInteractor: ImagesInteractor) : ViewModel() {
-    val imagesFlow: StateFlow<Set<Image>> get() = _imagesFlow
-    protected val _imagesFlow: MutableStateFlow<Set<Image>> = MutableStateFlow(emptySet())
+    val imagesFlow: StateFlow<List<Image>> get() = _imagesFlow
+    protected val _imagesFlow: MutableStateFlow<List<Image>> = MutableStateFlow(emptyList())
 
     val imageUploadedEvent get() = _imageUploadedEvent.receiveAsFlow()
     private val _imageUploadedEvent = Channel<State<Unit>>(Channel.CONFLATED)
@@ -31,7 +31,7 @@ internal open class SaveImagesViewModel(private val imagesInteractor: ImagesInte
     }
 
     fun addImages(images: List<Image>) {
-        _imagesFlow.value = _imagesFlow.value.toMutableSet().apply { addAll(images) }
+        _imagesFlow.value = _imagesFlow.value.toMutableList().apply { addAll(images) }
     }
 
     fun addImage(image: Image) {
@@ -41,7 +41,7 @@ internal open class SaveImagesViewModel(private val imagesInteractor: ImagesInte
     fun updateImagesDate(date: Long) {
         _imagesFlow.value = _imagesFlow.value.map { image ->
             image.copy(date = date)
-        }.toSet()
+        }
     }
 
     fun updateImageDescription(image: Image, description: String) {
@@ -51,7 +51,7 @@ internal open class SaveImagesViewModel(private val imagesInteractor: ImagesInte
                     it.copy(description = description)
                 } else it
             }
-        }.toSet()
+        }
     }
 
     fun saveImages() {
@@ -73,7 +73,7 @@ internal open class SaveImagesViewModel(private val imagesInteractor: ImagesInte
     }
 
     fun clearImages() {
-        _imagesFlow.value = emptySet()
+        _imagesFlow.value = emptyList()
     }
 
     companion object {
