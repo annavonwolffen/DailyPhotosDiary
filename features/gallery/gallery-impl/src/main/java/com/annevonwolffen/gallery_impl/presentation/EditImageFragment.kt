@@ -58,6 +58,7 @@ internal class EditImageFragment : Fragment(R.layout.fragment_edit_image) {
             binding.tvDate
         )
         imageToEdit.takeIf { savedInstanceState == null }?.let {
+            viewModel.initialDate = it.date ?: 0L
             viewModel.addImage(it)
         }
         initViews()

@@ -39,7 +39,7 @@ internal open class SaveImagesViewModel(private val imagesInteractor: ImagesInte
         addImages(listOf(image))
     }
 
-    open fun updateImagesDate(date: Long) {
+    fun updateImagesDate(date: Long) {
         _imagesFlow.value = _imagesFlow.value.map { image ->
             image.copy(date = date)
         }

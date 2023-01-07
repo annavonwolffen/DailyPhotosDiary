@@ -23,15 +23,10 @@ internal class EditImageViewModel(private val imagesInteractor: ImagesInteractor
         _progressLoaderState.value = false
     }
 
-    private var dateWasChanged = false
-
-    override fun updateImagesDate(date: Long) {
-        super.updateImagesDate(date)
-        dateWasChanged = true
-    }
+    var initialDate: Long = 0L
 
     override fun setImagesOrder() {
-        if (dateWasChanged) {
+        if (_imagesFlow.value[0].date != initialDate) {
             super.setImagesOrder()
         }
     }
