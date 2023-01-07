@@ -10,7 +10,6 @@ import com.annevonwolffen.gallery_impl.databinding.ImageCardLayoutBinding
 import com.annevonwolffen.gallery_impl.presentation.models.Image
 import com.annevonwolffen.gallery_impl.presentation.utils.toCalendar
 import com.annevonwolffen.gallery_impl.presentation.utils.toDateString
-import com.annevonwolffen.gallery_impl.presentation.utils.toDayOfWeekString
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 
 class ImagesListAdapter(
@@ -58,7 +57,6 @@ class ImagesListAdapter(
         fun bind(image: Image, payloads: MutableList<Any>? = null) {
             // TODO: parse payloads
             with(image) {
-                binding.tvDayOfWeek.text = date?.toCalendar()?.toDayOfWeekString(binding.root.resources)
                 binding.tvDescription.text = description
                 imageLoader.loadImage(binding.ivPhoto, url, R.drawable.image_progress_loader)
                 binding.content.setOnClickListener { onClick.invoke(this) }

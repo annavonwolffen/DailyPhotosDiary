@@ -27,21 +27,7 @@
             app:layout_constraintDimensionRatio="H,4:3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_day_of_week" />
-
-        <TextView
-            android:id="@+id/tv_day_of_week"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="12dp"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Четверг" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_description"
@@ -49,10 +35,10 @@
             android:layout_height="wrap_content"
             android:lines="2"
             android:maxLines="2"
-            android:paddingBottom="12dp"
-            android:paddingEnd="6dp"
             android:paddingStart="12dp"
             android:paddingTop="12dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="12dp"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -11,6 +11,7 @@ import com.annevonwolffen.gallery_impl.presentation.models.Image
 import com.annevonwolffen.gallery_impl.presentation.models.ImagesGroup
 import com.annevonwolffen.gallery_impl.presentation.utils.toCalendar
 import com.annevonwolffen.gallery_impl.presentation.utils.toDateString
+import com.annevonwolffen.gallery_impl.presentation.utils.toDayOfWeekString
 import com.annevonwolffen.ui_utils_api.image.ImageLoader
 
 class ImagesGroupListAdapter(
@@ -47,6 +48,7 @@ class ImagesGroupListAdapter(
         fun bind(imagesGroup: ImagesGroup) {
             with(imagesGroup) {
                 binding.tvDate.text = date.toCalendar().toDateString(binding.root.resources)
+                binding.tvDayOfWeek.text = date.toCalendar().toDayOfWeekString(binding.root.resources)
                 imagesRecyclerView = binding.rvImages
                 val snapHelper = LinearSnapHelper()
                 snapHelper.attachToRecyclerView(imagesRecyclerView)
