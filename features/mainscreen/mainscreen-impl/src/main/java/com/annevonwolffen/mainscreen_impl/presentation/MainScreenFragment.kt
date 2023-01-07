@@ -100,7 +100,7 @@ class MainScreenFragment : Fragment(), ToolbarFragment {
         )
         toolbar = view.findViewById(R.id.toolbar)
         toolbar.setupWithNavController(navController, appBarConfiguration)
-        view.findViewById<AppBarLayout>(R.id.appbar).doOnApplyWindowInsets { topInset, _ ->
+        view.findViewById<AppBarLayout>(R.id.appbar).doOnApplyWindowInsets { topInset, _, _ ->
             updatePadding(top = topInset)
         }
     }

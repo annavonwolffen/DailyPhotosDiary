@@ -58,14 +58,14 @@ class ImagesListAdapter(
         fun bind(image: Image, payloads: MutableList<Any>? = null) {
             // TODO: parse payloads
             with(image) {
-                binding.tvDayOfWeek.text = date.toCalendar().toDayOfWeekString(binding.root.resources)
+                binding.tvDayOfWeek.text = date?.toCalendar()?.toDayOfWeekString(binding.root.resources)
                 binding.tvDescription.text = description
                 imageLoader.loadImage(binding.ivPhoto, url, R.drawable.image_progress_loader)
                 binding.content.setOnClickListener { onClick.invoke(this) }
                 binding.content.setOnLongClickListener {
                     onLongClick(
                         image.url,
-                        image.date.toCalendar().toDateString(binding.root.resources)
+                        image.date?.toCalendar()?.toDateString(binding.root.resources).orEmpty()
                     ); true
                 }
             }

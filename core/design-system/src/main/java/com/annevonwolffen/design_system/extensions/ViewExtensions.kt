@@ -4,15 +4,16 @@ import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-typealias OnSystemInsetsChangedListener = View.(topInset: Int, bottomInset: Int) -> Unit
+typealias OnSystemInsetsChangedListener = View.(topInset: Int, bottomInset: Int, keyBoardInset: Int) -> Unit
 
 fun View.doOnApplyWindowInsets(listener: OnSystemInsetsChangedListener) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
 
         val topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
         val bottomInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+        val keyboardInset = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
 
-        listener(topInset, bottomInset)
+        listener(topInset, bottomInset, keyboardInset)
         insets
     }
 

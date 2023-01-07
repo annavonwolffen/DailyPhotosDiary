@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="24dp">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="@dimen/margin_medium" />
+
+            <ImageView
+                android:id="@+id/iv_date"
+                android:layout_width="@dimen/icon_size_default"
+                android:layout_height="@dimen/icon_size_default"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_calendar_36"
+                app:layout_constraintStart_toStartOf="@id/guideline_start"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/color_green_300_dark" />
+
+            <TextView
+                android:id="@+id/tv_title_when"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:text="@string/when"
+                android:textAppearance="@style/TextAppearance.DailyPhotosDiary.Caption"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_date"
+                app:layout_constraintTop_toTopOf="@id/iv_date" />
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:freezesText="true"
+                android:textAppearance="@style/TextAppearance.DailyPhotosDiary.Default.Colored"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_title_when"
+                app:layout_constraintTop_toBottomOf="@id/tv_title_when"
+                tools:text="Сегодня" />
+
+            <ImageButton
+                android:id="@+id/btn_image"
+                android:layout_width="@dimen/icon_size_default"
+                android:layout_height="@dimen/icon_size_default"
+                android:layout_marginTop="24dp"
+                android:background="@null"
+                android:contentDescription="@string/add_image"
+                android:src="@drawable/ic_image_plus_36"
+                app:layout_constraintStart_toStartOf="@id/guideline_start"
+                app:layout_constraintTop_toBottomOf="@+id/iv_date"
+                app:tint="@color/color_green_300_dark" />
+
+            <ImageView
+                android:id="@+id/btn_cancel_add"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/ic_delete_24"
+                android:tint="@color/color_green_300_dark"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/rv_added_images"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_added_images"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                android:paddingHorizontal="@dimen/padding_medium"
+                android:paddingTop="@dimen/padding_medium"
+                android:paddingBottom="92dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_image"
+                app:layout_goneMarginTop="@dimen/margin_very_big"
+                tools:itemCount="2"
+                tools:listitem="@layout/added_images_item" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="@android:color/darker_gray"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</FrameLayout>

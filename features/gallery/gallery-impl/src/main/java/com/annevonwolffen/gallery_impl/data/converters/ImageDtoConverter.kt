@@ -1,6 +1,7 @@
 package com.annevonwolffen.gallery_impl.data.converters
 
 import com.annevonwolffen.gallery_impl.data.ImageDto
+import com.annevonwolffen.gallery_impl.data.OrderInDateGroup
 import com.annevonwolffen.gallery_impl.domain.Image
 
 internal object ImageDtoConverter {
@@ -11,7 +12,8 @@ internal object ImageDtoConverter {
                 name.orEmpty(),
                 description.orEmpty(),
                 createdAt ?: 0L,
-                url.orEmpty()
+                url.orEmpty(),
+                orderWithinDateGroup
             )
         }
 
@@ -22,7 +24,10 @@ internal object ImageDtoConverter {
                 name = name,
                 description = description,
                 createdAt = date,
-                url = url
+                url = url,
+                orderWithinDateGroup = orderWithinDateGroup?.let {
+                    OrderInDateGroup(it.order, it.editTimeMillis)
+                }
             )
         }
 }

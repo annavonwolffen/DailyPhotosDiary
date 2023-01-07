@@ -8,9 +8,12 @@ import com.annevonwolffen.gallery_impl.data.remote.RemoteFileStorage
 import com.annevonwolffen.gallery_impl.domain.Image
 import com.annevonwolffen.gallery_impl.domain.ImagesRepository
 import com.annevonwolffen.gallery_impl.presentation.Result
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 
 internal class ImagesRepositoryImpl(
@@ -37,21 +40,51 @@ internal class ImagesRepositoryImpl(
         }
     }
 
-    override suspend fun uploadImage(folder: String, image: Image): Result<String> {
-        return withContext(coroutineDispatchers.ioDispatcher) {
-            runCatching {
-                val id = remoteDataSource.uploadImage(folder, convertDomainToData(image))
-                Result.Success(id)
-            }.getOrElse { Result.Error(it.message) }
+    override suspend fun uploadImages(folder: String, images: List<Image>): Result<List<Image>> {
+        val updatedImages: List<Image> = supervisorScope {
+            val imagesWithDeferredIds: List<Pair<Image, Deferred<String>>> = images.map { image ->
+                Pair(image, async(coroutineDispatchers.ioDispatcher) {
+                    remoteDataSource.uploadImage(
+                        folder,
+                        convertDomainToData(image)
+                    )
+                })
+            }
+            imagesWithDeferredIds.mapNotNull {
+                runCatching { it.first.copy(id = it.second.await()) }.getOrNull()
+            }
+        }
+
+        return if (updatedImages.isNotEmpty()) {
+            Result.Success(updatedImages)
+        } else {
+            Result.Error("Не удалось загрузить изображения.")
         }
     }
 
-    override suspend fun uploadFileToStorage(folder: String, image: Image) {
-        withContext(coroutineDispatchers.ioDispatcher) {
-            val url = remoteFileStorage.uploadFileToStorage(folder, convertDomainToData(image))
-            // обновить ссылку на изображение в базе
-            uploadImage(folder, image.copy(url = url))
+    override suspend fun uploadFilesToStorage(folder: String, images: List<Image>) {
+        val imagesWithUpdatedUrls: List<Image> = supervisorScope {
+            val imagesWithRemoteUrlsDeferred: List<Pair<Image, Deferred<String>>> = images.map { image ->
+                Pair(
+                    image,
+                    async(coroutineDispatchers.ioDispatcher) {
+                        remoteFileStorage.uploadFileToStorage(
+                            folder,
+                            convertDomainToData(image)
+                        )
+                    })
+            }
+            imagesWithRemoteUrlsDeferred.mapNotNull {
+                runCatching {
+                    it.first.copy(url = it.second.await())
+                }.getOrElse {
+                    // TODO: сохранить image для повторной загрузки в фоне
+                    null
+                }
+            }
         }
+        // обновить ссылки на изображения в базе
+        uploadImages(folder, imagesWithUpdatedUrls)
     }
 
     override suspend fun deleteImage(folder: String, image: Image): Result<Unit> {

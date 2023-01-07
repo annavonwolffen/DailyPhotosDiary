@@ -5,5 +5,6 @@ data class Image(
     val name: String,
     val description: String? = null,
     val date: Long,
-    val url: String
+    val url: String,
+    val orderWithinDateGroup: OrderInDateGroup? = null
 )

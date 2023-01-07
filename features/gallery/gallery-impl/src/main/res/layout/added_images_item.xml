@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_very_small"
+    >
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_added_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="H,4:3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedCorners" />
+
+    <EditText
+        android:id="@+id/et_added_image_description"
+        style="@style/Widget.DailyPhotosDiary.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:hint="@string/added_image_description"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine|textNoSuggestions|textAutoComplete"
+        android:lines="3"
+        android:maxLength="200"
+        android:maxLines="3"
+        android:padding="@dimen/padding_small"
+        app:layout_constraintEnd_toEndOf="@id/iv_added_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_added_image"
+        app:layout_constraintTop_toBottomOf="@id/iv_added_image" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

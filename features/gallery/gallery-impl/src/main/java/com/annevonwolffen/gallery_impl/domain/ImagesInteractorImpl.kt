@@ -9,12 +9,12 @@ class ImagesInteractorImpl @Inject constructor(private val imagesRepository: Ima
         return imagesRepository.getImagesFlow(folder)
     }
 
-    override suspend fun uploadImage(folder: String, image: Image): Result<String> {
-        return imagesRepository.uploadImage(folder, image)
+    override suspend fun uploadImages(folder: String, images: List<Image>): Result<List<Image>> {
+        return imagesRepository.uploadImages(folder, images)
     }
 
-    override suspend fun uploadFileToStorage(folder: String, image: Image) {
-        return imagesRepository.uploadFileToStorage(folder, image)
+    override suspend fun uploadFilesToStorage(folder: String, images: List<Image>) {
+        return imagesRepository.uploadFilesToStorage(folder, images)
     }
 
     override suspend fun deleteImage(folder: String, image: Image): Result<Unit> {

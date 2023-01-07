@@ -56,6 +56,7 @@ dependencies {
 
     implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
+    kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:$kotlinxMetadataJvm"
 
     // Kotlin + coroutines
     implementation "androidx.work:work-runtime-ktx:$work"
