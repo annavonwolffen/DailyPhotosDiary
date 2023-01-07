@@ -7,6 +7,7 @@ import com.annevonwolffen.gallery_impl.domain.ImagesInteractor
 import com.annevonwolffen.gallery_impl.presentation.Result
 import com.annevonwolffen.gallery_impl.presentation.State
 import com.annevonwolffen.gallery_impl.presentation.models.Image
+import com.annevonwolffen.gallery_impl.presentation.models.OrderInDateGroup
 import com.annevonwolffen.gallery_impl.presentation.models.toDomain
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -38,7 +39,7 @@ internal open class SaveImagesViewModel(private val imagesInteractor: ImagesInte
         addImages(listOf(image))
     }
 
-    fun updateImagesDate(date: Long) {
+    open fun updateImagesDate(date: Long) {
         _imagesFlow.value = _imagesFlow.value.map { image ->
             image.copy(date = date)
         }
@@ -54,7 +55,20 @@ internal open class SaveImagesViewModel(private val imagesInteractor: ImagesInte
         }
     }
 
+    open fun setImagesOrder() {
+        val setOrderTimeMillis = System.currentTimeMillis()
+        _imagesFlow.value = _imagesFlow.value.mapIndexed { index, image ->
+            image.copy(
+                orderWithinDateGroup = OrderInDateGroup(
+                    order = index.toLong(),
+                    editTimeMillis = setOrderTimeMillis
+                )
+            )
+        }
+    }
+
     fun saveImages() {
+        setImagesOrder()
         viewModelScope.launch(exceptionHandler) {
             _progressLoaderState.value = true
             imagesInteractor.uploadImages(TEST_FOLDER, _imagesFlow.value.map { it.toDomain() }).also {

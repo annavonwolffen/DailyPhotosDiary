@@ -23,6 +23,19 @@ internal class EditImageViewModel(private val imagesInteractor: ImagesInteractor
         _progressLoaderState.value = false
     }
 
+    private var dateWasChanged = false
+
+    override fun updateImagesDate(date: Long) {
+        super.updateImagesDate(date)
+        dateWasChanged = true
+    }
+
+    override fun setImagesOrder() {
+        if (dateWasChanged) {
+            super.setImagesOrder()
+        }
+    }
+
     fun deleteImage(image: Image) {
         viewModelScope.launch(deleteExceptionHandler) {
             _progressLoaderState.value = true

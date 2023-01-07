@@ -15,4 +15,5 @@ data class Image(
 ) : Parcelable
 
 fun Image.toDomain(): DomainImage = DomainImage(id, name, description, date ?: 0L, url, orderWithinDateGroup)
-fun DomainImage.toPresentation() = Image(id, name, description, date, url)
+fun DomainImage.toPresentation() =
+    Image(id, name, description, date, url, orderWithinDateGroup?.let { OrderInDateGroup(it.order, it.editTimeMillis) })
